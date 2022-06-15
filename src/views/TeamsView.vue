@@ -1,7 +1,13 @@
 <template>
   <v-row>
     <v-col>
-      <v-text-field name="team" label="Teams" v-model=name @keydown.enter="addTeam" append-inner-icon="mdi-plus">
+      <v-text-field
+        name="team"
+        label="Teams"
+        v-model="name"
+        @keydown.enter="addTeam"
+        append-inner-icon="mdi-plus"
+      >
       </v-text-field>
     </v-col>
   </v-row>
@@ -9,30 +15,37 @@
     <v-table>
       <thead>
         <tr>
-          <th class="text-left" style="width: 100px;">
-            Rank
-          </th>
-          <th class="text-left" style="width: 400px;">
-            Name
-          </th>
-          <th class="text-left" style="width: 200px;">
-            Match
-          </th>
-          <th class="text-left" style="width: 100px;">
-            Score
-          </th>
+          <th class="text-left" style="width: 100px">Numéro</th>
+          <th class="text-left" style="width: 100px">Présent</th>
+          <th class="text-left" style="width: 400px">Nom</th>
+          <th class="text-left" style="width: 300px">Staff</th>
+          <th class="text-left" style="width: 100px">Score</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in tournamentStore.teams" :key="item.name">
           <td>{{ index + 1 }}</td>
+          <td class="d-flex justify-start align-center"> 
+            <v-checkbox v-model="item.isReady" hide-details></v-checkbox>
+          </td>
           <td>{{ item.name }}</td>
-          <td>W-L-W-W-W</td>
-          <td>1600</td>
+          <td class="d-flex justify-start align-center">
+            <v-checkbox v-model="item.isStaf" hide-details></v-checkbox>
+            <v-text-field v-if="item.isStaf" class="mr-3" single-line hide-details density="compact" label="Staff info"
+                          v-model="item.staffInfo"></v-text-field>
+          </td>
+          <td>{{ item.score }}</td>
           <td>
-            <v-btn variant="outlined" icon size="x-small" color="red" @click="deleteTeam(item)">
+            <v-btn
+              variant="outlined"
+              icon
+              size="x-small"
+              color="red"
+              @click="deleteTeam(item)"
+            >
               <v-icon>mdi-delete</v-icon>
-            </v-btn></td>
+            </v-btn>
+          </td>
         </tr>
       </tbody>
     </v-table>
@@ -40,9 +53,9 @@
 </template>
 
 <script setup lang="ts">
-import type Team from '@/models/team';
-import { useTournamentStore } from '@/stores/tournament';
-import { ref } from 'vue';
+import type Team from "@/models/team";
+import { useTournamentStore } from "@/stores/tournament";
+import { ref } from "vue";
 
 const tournamentStore = useTournamentStore();
 const name = ref();
@@ -52,8 +65,7 @@ function addTeam() {
   name.value = "";
 }
 
-function deleteTeam(team: Team){
+function deleteTeam(team: Team) {
   tournamentStore.deleteTeam(team);
 }
 </script>
-

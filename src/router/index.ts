@@ -13,6 +13,11 @@ const router = createRouter({
       component: () => import("../views/TeamsView.vue"),
     },
     {
+      path: "/ranking",
+      name: "ranking",
+      component: () => import("../views/RankingView.vue"),
+    },
+    {
       path: "/round",
       name: "round",
       component: () => import("../views/RoundView.vue"),

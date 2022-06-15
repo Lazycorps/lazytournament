@@ -1,13 +1,23 @@
 export interface ITeam {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
+  score: number;
+  pointMarque: number;
+  isStaff: boolean;
+  isReady: boolean;
+  staffInfo: string;
 }
 
 export default class Team {
-    id: number = 0
-    name: string = '';
+  id = 0;
+  name = "";
+  score = 0;
+  pointMarque = 0;
+  isStaf = false;
+  isReady = false;
+  staffInfo = "";
 
-    constructor(params: ITeam){
-        Object.assign(this, params);
-    }
+  constructor(params: ITeam) {
+    Object.assign(this, params);
+  }
 }
