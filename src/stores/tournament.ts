@@ -15,8 +15,9 @@ export const useTournamentStore = defineStore({
   getters: {
     split: (state) => Math.ceil(state.teams.length / (state.fields * 2)),
     getTeamsByScore: (state) =>
-      state.teams
-        .sort((t1, t2) => t2.score - t1.score || t2.pointMarque - t1.pointMarque),
+      state.teams.sort(
+        (t1, t2) => t2.score - t1.score || t2.pointMarque - t1.pointMarque
+      ),
     getByRound: (state) => {
       return (roundNumber: number) =>
         state.matches.filter((m) => m.round == roundNumber);
@@ -47,7 +48,7 @@ export const useTournamentStore = defineStore({
     getTeamStaffInfo: (state) => {
       return (teamName: string) => {
         const team = state.teams.filter((m) => m.name == teamName)[0];
-        return team.isStaf ? ` (${team.staffInfo})` : "";
+        return team?.isStaf ? ` (${team.staffInfo})` : "";
       };
     },
     getTeamMatches: (state) => {
@@ -83,12 +84,14 @@ export const useTournamentStore = defineStore({
     },
     generateRound(round: number) {
       const roundMatch = this.matches.filter((m) => m.round == round);
-      roundMatch.forEach((m) =>
-        this.matches.splice(this.matches.indexOf(m), 1)
-      );
+      if (roundMatch.length) {
+        roundMatch.forEach((m) =>
+          this.matches.splice(this.matches.indexOf(m), 1)
+        );
+      }
       if (round == 1) {
         this.teams.forEach((t) => (t.score = 0));
-        const shuffleTeams = [...this.teams];
+        const shuffleTeams = this.teams.filter((t) => t.isReady);
         shuffleArray(shuffleTeams);
         let field = 1;
         for (let i = 0; i < shuffleTeams.length; i++) {
@@ -107,7 +110,9 @@ export const useTournamentStore = defineStore({
           i++;
         }
       } else {
-        const teamsToPair = [...this.getTeamsByScore];
+        const teamsToPair = this.teams.filter(t => t.isReady).sort(
+          (t1, t2) => t1.score - t2.score || t1.pointMarque - t2.pointMarque
+        );
         let field = 1;
 
         for (let i = 0; i < teamsToPair.length; i++) {
