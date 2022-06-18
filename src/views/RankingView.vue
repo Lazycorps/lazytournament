@@ -10,7 +10,7 @@
           <th class="text-left" style="width: 400px">Name</th>
           <th class="text-left" style="width: 200px">Match</th>
           <th class="text-left" style="width: 100px">Score</th>
-          <th class="text-left" style="width: 100px">Points marqués</th>
+          <th class="text-left" style="width: 100px">Diff. points</th>
         </tr>
       </thead>
       <tbody>
@@ -40,7 +40,7 @@
                 N
               </div>
               <div
-                v-else="match.winner != team.name"
+                v-else-if="match.winner != team.name && match.winner != ''"
                 class="mr-3"
                 style="color: red; font-weight: bold"
               >

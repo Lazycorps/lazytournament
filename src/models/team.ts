@@ -13,7 +13,7 @@ export default class Team {
   name = "";
   score = 0;
   pointMarque = 0;
-  isStaf = false;
+  isStaff = false;
   isReady = false;
   staffInfo = "";
 

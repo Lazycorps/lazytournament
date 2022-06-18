@@ -30,8 +30,8 @@
           </td>
           <td>{{ item.name }}</td>
           <td class="d-flex justify-start align-center">
-            <v-checkbox v-model="item.isStaf" hide-details></v-checkbox>
-            <v-text-field v-if="item.isStaf" class="mr-3" single-line hide-details density="compact" label="Staff info"
+            <v-checkbox v-model="item.isStaff" hide-details></v-checkbox>
+            <v-text-field v-if="item.isStaff" class="mr-3" single-line hide-details density="compact" label="Staff info"
                           v-model="item.staffInfo"></v-text-field>
           </td>
           <td>{{ item.score }}</td>
