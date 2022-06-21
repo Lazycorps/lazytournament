@@ -108,20 +108,6 @@ export const useTournamentStore = defineStore({
           return true;
 
         return false;
-        // const previousRoundMatch =
-        //   state.matches.filter(
-        //     (m) => m.round == manche - 1 && m.phase == phase && m.winner == ""
-        //   ).length != 0;
-        // const currentRoundMatch =
-        //   state.matches.filter(
-        //     (m) =>
-        //       m.round == manche &&
-        //       m.phase == phase &&
-        //       m.winner != "" &&
-        //       m.team2 != null
-        //   ).length > 0;
-
-        // return previousRoundMatch && currentRoundMatch;
       };
     },
   },
@@ -191,14 +177,20 @@ export const useTournamentStore = defineStore({
         }
       } else {
         let teamsToPair: Team[] = [];
-        //Si on génère une phase en particuler on ne prend que les équipes ayant joué la premières phase lors de la manche précédente 
+        //Si on génère une phase en particuler on ne prend que les équipes ayant joué la premières phase lors de la manche précédente
         if (phaseToGenerate > 0) {
           const previousMatch = this.matches.filter(
             (m) => m.phase == phaseToGenerate && m.round == round - 1
           );
           previousMatch.forEach((p) => {
-            if (p.team1) teamsToPair.push(this.teams.filter(t => t.name == p.team1?.name)[0]);
-            if (p.team2) teamsToPair.push(this.teams.filter((t) => t.name == p.team2?.name)[0]);
+            if (p.team1)
+              teamsToPair.push(
+                this.teams.filter((t) => t.name == p.team1?.name)[0]
+              );
+            if (p.team2)
+              teamsToPair.push(
+                this.teams.filter((t) => t.name == p.team2?.name)[0]
+              );
           });
           teamsToPair = teamsToPair.sort(
             (t1, t2) => t2.score - t1.score || t2.pointMarque - t1.pointMarque
@@ -229,7 +221,7 @@ export const useTournamentStore = defineStore({
               break;
             }
           }
-          
+
           //Création de l'objet match, si le nombre d'équipe est impair, l'équipe ayant le plus petit score est déclarée vainqueure et ne joue pas cette manche
           const match = new Match({
             field: 1,
@@ -245,9 +237,8 @@ export const useTournamentStore = defineStore({
         if (round == this.rounds)
           //Pour la dernière manche les équipes ne sont pas mélangées et le tableau est inversé pour faire joué les meilleurs équipes ensemble pour la fin du tournois
           matches = matches.reverse();
-        else
-          shuffleArray(matches);
-          
+        else shuffleArray(matches);
+
         let field = 1;
         let phase = phaseToGenerate == 0 ? 1 : phaseToGenerate;
         matches.forEach((m) => {
@@ -267,16 +258,20 @@ export const useTournamentStore = defineStore({
       else if (match.scoreTeam1 > match.scoreTeam2) {
         match.winner = match.team1?.name || "";
       } else {
-        match.winner = match.team2?.name || "";
+        match.winner = match.team2?.name || "Nothing";
       }
 
       const team1 = this.teams.filter((t) => t.name == match.team1?.name)[0];
-      team1.score = this.getTeamScore(team1.name);
-      team1.pointMarque = this.getTeamDifPoint(team1.name);
+      if (team1) {
+        team1.score = this.getTeamScore(team1.name);
+        team1.pointMarque = this.getTeamDifPoint(team1.name);
+      }
 
       const team2 = this.teams.filter((t) => t.name == match.team2?.name)[0];
-      team2.score = this.getTeamScore(team2.name);
-      team2.pointMarque = this.getTeamDifPoint(team2.name);
+      if (team2) {
+        team2.score = this.getTeamScore(team2.name);
+        team2.pointMarque = this.getTeamDifPoint(team2.name);
+      }
     },
     recalculScore() {
       this.teams.forEach((t) => {

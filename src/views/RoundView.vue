@@ -61,12 +61,12 @@
             <td :style="getColor(item, item.team1?.name)">
               {{ item.team1?.name
               }}<b v-if="item.team1?.isStaff" class="ml-2">({{ item.team1?.staffInfo }})</b> -
-              {{ tournamentStore.getTeamScore(item.team1?.name) }}
+              {{ item.team1?.score }}
             </td>
             <td v-if="item.team2" :style="getColor(item, item.team2?.name)">
               {{ item.team2?.name
               }}<b v-if="item.team2?.isStaff" class="ml-2">{{ tournamentStore.getTeamStaffInfo(item.team2?.name) }}</b> -
-              {{ tournamentStore.getTeamScore(item.team2?.name) }}
+              {{ item.team2?.score}}
             </td>
             <td v-else></td>
             <td class="d-flex justify-start align-center">
@@ -125,10 +125,10 @@
   >
     <v-card>
       <v-card-title class="d-flex justify-end">
-        <v-btn round color="primary" dark @click="print();"
+        <v-btn round color="primary" class="mr-5 noprint" prepend-icon="mdi-printer" dark @click="print();"
           >Print</v-btn
         >
-        <v-btn round color="primary" dark @click="printDialog = false"
+        <v-btn round color="primary" class="noprint" dark prepend-icon="mdi-close" @click="printDialog = false"
           >Fermer</v-btn
         >
       </v-card-title>

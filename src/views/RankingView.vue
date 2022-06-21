@@ -1,6 +1,18 @@
 <template>
-  <v-row> 
-    <v-btn outline color="primary" @click="tournamentStore.recalculScore" dark>Recalcul</v-btn>
+  <v-row>
+    <h1 >Classement</h1>
+    <v-btn
+      round
+      color="primary"
+      class="ml-15 mr-5 noprint"
+      prepend-icon="mdi-printer"
+      dark
+      @click="print()"
+      >Print</v-btn
+    >
+    <v-btn outline class="noprint" color="primary" @click="tournamentStore.recalculScore" dark
+      >Recalculer</v-btn
+    >
   </v-row>
   <v-row>
     <v-table>
@@ -61,4 +73,8 @@ import { useTournamentStore } from "@/stores/tournament";
 import { ref } from "vue";
 
 const tournamentStore = useTournamentStore();
+
+function print() {
+  window.print();
+}
 </script>
