@@ -16,23 +16,45 @@
       <thead>
         <tr>
           <th class="text-left" style="width: 100px">Numéro</th>
-          <th class="text-left" style="width: 100px">Présent</th>
+          <th class="text-left" style="width: 80">Présent</th>
+          <th class="text-left" style="width: 80">boule</th>
           <th class="text-left" style="width: 400px">Nom</th>
+          <th class="text-left" style="width: 400px">Responsable</th>
           <th class="text-left" style="width: 300px">Staff</th>
           <th class="text-left" style="width: 100px">Score</th>
+          <th class="text-left" style="width: 100px"></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in tournamentStore.teams" :key="item.name">
           <td>{{ index + 1 }}</td>
-          <td class="d-flex justify-start align-center"> 
+          <td>
             <v-checkbox v-model="item.isReady" hide-details></v-checkbox>
           </td>
+          <td>
+            <v-checkbox v-model="item.boule" hide-details></v-checkbox>
+          </td>
           <td>{{ item.name }}</td>
-          <td class="d-flex justify-start align-center">
+          <td>
+            <v-text-field
+              class="mr-3"
+              single-line
+              hide-details
+              density="compact"
+              v-model="item.membre"
+            ></v-text-field>
+          </td>
+          <td class="d-flex justify-start">
             <v-checkbox v-model="item.isStaff" hide-details></v-checkbox>
-            <v-text-field v-if="item.isStaff" class="mr-3" single-line hide-details density="compact" label="Staff info"
-                          v-model="item.staffInfo"></v-text-field>
+            <v-text-field
+              v-if="item.isStaff"
+              class="mr-3"
+              single-line
+              hide-details
+              density="compact"
+              label="Staff info"
+              v-model="item.staffInfo"
+            ></v-text-field>
           </td>
           <td>{{ item.score }}</td>
           <td>

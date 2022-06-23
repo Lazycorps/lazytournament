@@ -6,6 +6,8 @@ export interface ITeam {
   isStaff: boolean;
   isReady: boolean;
   staffInfo: string;
+  membre: string;
+  boule: boolean;
 }
 
 export default class Team {
@@ -16,6 +18,8 @@ export default class Team {
   isStaff = false;
   isReady = false;
   staffInfo = "";
+  boule = false;
+  membre = "";
 
   constructor(params: ITeam) {
     Object.assign(this, params);
