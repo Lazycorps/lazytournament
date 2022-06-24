@@ -128,6 +128,8 @@ export const useTournamentStore = defineStore({
           isStaff: false,
           staffInfo: "",
           isReady: false,
+          boule: false,
+          membre: ""
         })
       );
     },
@@ -211,12 +213,12 @@ export const useTournamentStore = defineStore({
             const alreadyPlayed = this.matches.filter(
               (m) =>
                 (m.team1?.name == firstTeam.name &&
-                  m.team2 == secondTeam.name) ||
+                  m.team2?.name == secondTeam.name) ||
                 (m.team1?.name == secondTeam.name &&
                   m.team2?.name == firstTeam.name)
             )[0];
 
-            if (!alreadyPlayed) {
+            if (!alreadyPlayed || teamsToPair.length == 1) {
               teamsToPair.splice(j, 1);
               break;
             }
@@ -237,7 +239,7 @@ export const useTournamentStore = defineStore({
         if (round == this.rounds)
           //Pour la dernière manche les équipes ne sont pas mélangées et le tableau est inversé pour faire joué les meilleurs équipes ensemble pour la fin du tournois
           matches = matches.reverse();
-        else shuffleArray(matches);
+        //else shuffleArray(matches);
 
         let field = 1;
         let phase = phaseToGenerate == 0 ? 1 : phaseToGenerate;

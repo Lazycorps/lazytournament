@@ -11,7 +11,7 @@
     </v-col>
   </v-row>
   <v-row class="pl-3">
-    <v-col>
+    <v-col class="d-flex justify-start">
       <v-btn
         color="success"
         class="mr-3"
@@ -33,6 +33,9 @@
         @click="printDialog = true"
         append-icon="mdi-printer"
         >Imprimer</v-btn
+      >
+      <v-checkbox v-model="detail" hide-details class="ml-10"
+        >Détail</v-checkbox
       >
     </v-col>
   </v-row>
@@ -59,14 +62,20 @@
           <tr>
             <td>{{ item.field }}</td>
             <td :style="getColor(item, item.team1?.name)">
+              <v-icon v-if="detail && item.team1?.boule" size="x-small">mdi-basketball</v-icon>
               {{ item.team1?.name
-              }}<b v-if="item.team1?.isStaff" class="ml-2">({{ item.team1?.staffInfo }})</b> -
-              {{ item.team1?.score }}
+              }}<b v-if="item.team1?.isStaff" class="ml-2"
+                >({{ item.team1?.staffInfo }})</b
+              >
+              <div v-if="detail">{{ item.team1?.score }} - {{ item.team1?.membre }}</div>
             </td>
             <td v-if="item.team2" :style="getColor(item, item.team2?.name)">
+              <v-icon v-if="detail && item.team1?.boule" size="x-small">mdi-basketball</v-icon>
               {{ item.team2?.name
-              }}<b v-if="item.team2?.isStaff" class="ml-2">{{ tournamentStore.getTeamStaffInfo(item.team2?.name) }}</b> -
-              {{ item.team2?.score}}
+              }}<b v-if="item.team2?.isStaff" class="ml-2">{{
+                tournamentStore.getTeamStaffInfo(item.team2?.name)
+              }}</b>
+              <div v-if="detail">{{ item.team2?.score }} - {{ item.team2?.membre }}</div>
             </td>
             <td v-else></td>
             <td class="d-flex justify-start align-center">
@@ -125,10 +134,22 @@
   >
     <v-card>
       <v-card-title class="d-flex justify-end">
-        <v-btn round color="primary" class="mr-5 noprint" prepend-icon="mdi-printer" dark @click="print();"
+        <v-btn
+          round
+          color="primary"
+          class="mr-5 noprint"
+          prepend-icon="mdi-printer"
+          dark
+          @click="print()"
           >Print</v-btn
         >
-        <v-btn round color="primary" class="noprint" dark prepend-icon="mdi-close" @click="printDialog = false"
+        <v-btn
+          round
+          color="primary"
+          class="noprint"
+          dark
+          prepend-icon="mdi-close"
+          @click="printDialog = false"
           >Fermer</v-btn
         >
       </v-card-title>
@@ -177,6 +198,7 @@ import { onMounted, ref } from "vue";
 const tournamentStore = useTournamentStore();
 const roundDisplay = ref(1);
 const printDialog = ref(false);
+const detail = ref(false);
 
 onMounted(() => {});
 

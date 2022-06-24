@@ -11,6 +11,9 @@
       </v-text-field>
     </v-col>
   </v-row>
+  <v-row class="d-flex justify-start">
+    
+  </v-row>
   <v-row>
     <v-table>
       <thead>
@@ -18,11 +21,13 @@
           <th class="text-left" style="width: 100px">Numéro</th>
           <th class="text-left" style="width: 80">Présent</th>
           <th class="text-left" style="width: 80">boule</th>
-          <th class="text-left" style="width: 400px">Nom</th>
+          <th class="text-left" style="width: 300px">Nom</th>
           <th class="text-left" style="width: 400px">Responsable</th>
           <th class="text-left" style="width: 300px">Staff</th>
           <th class="text-left" style="width: 100px">Score</th>
-          <th class="text-left" style="width: 100px"></th>
+          <th class="text-left" style="width: 150px">
+            <v-checkbox v-model="edition" hide-details>Supprimer</v-checkbox>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -44,21 +49,25 @@
               v-model="item.membre"
             ></v-text-field>
           </td>
-          <td class="d-flex justify-start">
-            <v-checkbox v-model="item.isStaff" hide-details></v-checkbox>
-            <v-text-field
-              v-if="item.isStaff"
-              class="mr-3"
-              single-line
-              hide-details
-              density="compact"
-              label="Staff info"
-              v-model="item.staffInfo"
-            ></v-text-field>
+          <td>
+            <div class="d-flex justify-start align-center">
+              <v-checkbox v-model="item.isStaff" hide-details></v-checkbox>
+              <v-text-field
+                v-if="item.isStaff"
+                class="mr-3"
+                single-line
+                hide-details
+                density="compact"
+                label="Staff info"
+                style="width: 300px"
+                v-model="item.staffInfo"
+              ></v-text-field>
+            </div>
           </td>
           <td>{{ item.score }}</td>
           <td>
             <v-btn
+              v-if="edition"
               variant="outlined"
               icon
               size="x-small"
@@ -81,6 +90,7 @@ import { ref } from "vue";
 
 const tournamentStore = useTournamentStore();
 const name = ref();
+const edition = ref(false);
 
 function addTeam() {
   tournamentStore.addTeam(name.value);
