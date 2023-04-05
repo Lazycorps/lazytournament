@@ -4,8 +4,7 @@ import { useStorage } from "@vueuse/core";
 import Match from "@/models/match";
 import { shuffleArray } from "@/helper/functions";
 
-export const useTournamentStore = defineStore({
-  id: "tournament",
+export const useTournamentStore = defineStore("tournament", {
   state: () => ({
     rounds: useStorage("rounds", 1),
     fields: useStorage("fields", 1),
@@ -129,7 +128,7 @@ export const useTournamentStore = defineStore({
           staffInfo: "",
           isReady: false,
           boule: false,
-          membre: ""
+          membre: "",
         })
       );
     },
