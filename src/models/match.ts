@@ -1,4 +1,4 @@
-import type { ITeam } from '@/models/team';
+import type { ITeam } from "@/models/team";
 
 export interface IMatch {
   id: number;
@@ -22,6 +22,7 @@ export default class Match {
   scoreTeam2: number = 0;
   phase = 0;
   winner: string = "";
+  amicalForTeam2: boolean = false;
 
   constructor(params: Partial<IMatch>) {
     Object.assign(this, params);

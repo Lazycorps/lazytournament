@@ -62,39 +62,47 @@
           <tr>
             <td>{{ item.field }}</td>
             <td :style="getColor(item, item.team1?.name)">
-              <v-icon v-if="detail && item.team1?.boule" size="x-small">mdi-basketball</v-icon>
+              <v-icon v-if="detail && item.team1?.boule" size="x-small"
+                >mdi-basketball</v-icon
+              >
               {{ item.team1?.name
               }}<b v-if="item.team1?.isStaff" class="ml-2"
                 >({{ item.team1?.staffInfo }})</b
               >
-              <div v-if="detail">{{ item.team1?.score }} - {{ item.team1?.membre }}</div>
+              <div v-if="detail">
+                {{ item.team1?.score }} - {{ item.team1?.membre }}
+              </div>
             </td>
             <td v-if="item.team2" :style="getColor(item, item.team2?.name)">
-              <v-icon v-if="detail && item.team1?.boule" size="x-small">mdi-basketball</v-icon>
+              <v-icon v-if="detail && item.team2?.boule" size="x-small"
+                >mdi-basketball</v-icon
+              >
               {{ item.team2?.name
               }}<b v-if="item.team2?.isStaff" class="ml-2">{{
                 tournamentStore.getTeamStaffInfo(item.team2?.name)
               }}</b>
-              <div v-if="detail">{{ item.team2?.score }} - {{ item.team2?.membre }}</div>
+              <div v-if="detail">
+                {{ item.team2?.score }} - {{ item.team2?.membre }}
+              </div>
             </td>
             <td v-else></td>
             <td class="d-flex justify-start align-center">
               <v-text-field
-                class="mr-3"
                 single-line
                 hide-details
                 density="compact"
+                class="mr-3"
                 label="Equ.1"
-                v-model="item.scoreTeam1"
+                v-model.number.lazy="item.scoreTeam1"
                 :readonly="item.winner != ''"
                 type="number"
-              ></v-text-field>
+              />
               <v-text-field
                 single-line
                 hide-details
                 density="compact"
                 label="Equ.2"
-                v-model="item.scoreTeam2"
+                v-model.number.lazy="item.scoreTeam2"
                 :readonly="item.winner != ''"
                 type="number"
               >
