@@ -155,35 +155,8 @@ export const useTournamentStore = defineStore("tournament", {
           this.matches.splice(this.matches.indexOf(m), 1)
         );
       }
-      //Génération du premier round avec pairing aléatoire
-      // if (round == 1) {
-      //   this.teams.forEach((t) => (t.score = 0));
-      //   const shuffleTeams = this.teams.filter((t) => t.isReady);
-      //   shuffleArray(shuffleTeams);
-      //   let field = 1;
-      //   let phase = 1;
-      //   for (let i = 0; i < shuffleTeams.length; i++) {
-      //     const isLastTeams = shuffleTeams.length <= i + 1;
-      //     const match = new Match({
-      //       field,
-      //       round,
-      //       phase,
-      //       team1: shuffleTeams[i],
-      //       team2: !isLastTeams ? shuffleTeams[i + 1] : null,
-      //       winner: !isLastTeams ? "" : shuffleTeams[i].name,
-      //     });
-      //     this.matches.push(match);
 
-      //     if (field >= this.fields) {
-      //       field = 1;
-      //       phase++;
-      //     } else field++;
-
-      //     i++;
-      //   }
-      // } else {
       let teamsToPair: Team[] = [];
-
       //Si on génère une phase en particuler on ne prend que les équipes ayant joué la premières phase lors de la manche précédente
       if (phaseToGenerate > 0) {
         const previousMatch = this.matches.filter(
@@ -212,6 +185,7 @@ export const useTournamentStore = defineStore("tournament", {
 
         //si pas de team 2 du à un nombre impaire, on match avec une équipe du premier tableau
         if (match.team2 == null) {
+          console.log(matches);
           var otherTeamsToPair = this.getPreviousMatchTeams(
             phaseToGenerate == 0
               ? matches.filter((m) => m.phase != match.phase)
@@ -219,11 +193,11 @@ export const useTournamentStore = defineStore("tournament", {
                   (m) => m.round == round - 1 && m.phase != match.phase
                 )
           );
-          this.alreadyPlayedAmical.forEach((t) => otherTeamsToPair.reduce);
+
           const match2 = this.generateMatchForTeam(
             round,
             firstTeam,
-            otherTeamsToPair.filter((t) => this.alreadyPlayedAmical.includes(t))
+            otherTeamsToPair.filter((t) => !this.alreadyPlayedAmical.includes(t))
           );
           match.team2 = match2.team2;
           if (match2.team2) this.alreadyPlayedAmical.push(match2.team2);
@@ -285,6 +259,7 @@ export const useTournamentStore = defineStore("tournament", {
       return match;
     },
     getPreviousMatchTeams(previousMatch: Match[]) {
+      console.log("previous match", previousMatch)
       let teamsToPair: Team[] = [];
       previousMatch.forEach((p) => {
         if (p.team1)
