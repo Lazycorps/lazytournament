@@ -1,6 +1,6 @@
 <template>
   <v-row class="pa-3">
-    <v-col>
+    <v-col cols="12">
       <v-btn
         v-for="n in tournamentStore.rounds"
         :color="roundDisplay == n ? 'primary' : 'grey'"
@@ -10,8 +10,8 @@
       >
     </v-col>
   </v-row>
-  <v-row class="pl-3">
-    <v-col class="d-flex justify-start">
+  <v-row class="pl-3" no-gutters>
+    <v-col class="d-flex justify-start align-center" cols="12">
       <v-btn
         color="success"
         class="mr-3"
@@ -34,9 +34,16 @@
         append-icon="mdi-printer"
         >Imprimer</v-btn
       >
-      <v-checkbox v-model="detail" hide-details class="ml-10"
-        >Détail</v-checkbox
-      >
+      <v-checkbox v-model="detail" hide-details label="Détail"></v-checkbox>
+      <v-checkbox v-model="edit" hide-details label="Edit"></v-checkbox>
+      <v-checkbox
+        v-model="tournamentStore.bestTeamEnd"
+        hide-details
+        v-tooltip="
+          'Si coché, lors de la génération de la manche, les meilleurs équipes se retrouveront dans la dernière phase'
+        "
+        label="Best team end"
+      ></v-checkbox>
     </v-col>
   </v-row>
   <v-row>
@@ -56,33 +63,43 @@
         >
           <tr v-if="item.field == 1">
             <td colspan="5" class="" style="background-color: lightgray">
-              Phase {{ Math.abs(index / tournamentStore.fields + 1) }}
+              Phase {{ item.phase }}
             </td>
           </tr>
           <tr>
             <td>{{ item.field }}</td>
             <td :style="getColor(item, item.team1?.name)">
-              <v-icon v-if="detail && item.team1?.boule" size="x-small"
-                >mdi-basketball</v-icon
-              >
-              {{ item.team1?.name
-              }}<b v-if="item.team1?.isStaff" class="ml-2"
-                >({{ item.team1?.staffInfo }})</b
-              >
+              <v-select
+                v-if="edit"
+                :items="tournamentStore.teams"
+                v-model="item.team1"
+                item-title="name"
+                hide-details
+                density="compact"
+                return-object
+              ></v-select>
+              <div v-else>
+                {{ item.team1?.name }}
+              </div>
               <div v-if="detail">
-                {{ item.team1?.score }} - {{ item.team1?.membre }}
+                {{ item.team1?.membre }} <b>({{ item.team1?.score }})</b>
               </div>
             </td>
             <td v-if="item.team2" :style="getColor(item, item.team2?.name)">
-              <v-icon v-if="detail && item.team2?.boule" size="x-small"
-                >mdi-basketball</v-icon
-              >
-              {{ item.team2?.name
-              }}<b v-if="item.team2?.isStaff" class="ml-2">{{
-                tournamentStore.getTeamStaffInfo(item.team2?.name)
-              }}</b>
+              <v-select
+                v-if="edit"
+                :items="tournamentStore.teams"
+                v-model="item.team2"
+                item-title="name"
+                hide-details
+                density="compact"
+                return-object
+              ></v-select>
+              <div v-else>
+                {{ item.team2?.name }}
+              </div>
               <div v-if="detail">
-                {{ item.team2?.score }} - {{ item.team2?.membre }}
+                {{ item.team2?.membre }} <b>({{ item.team2?.score }})</b>
               </div>
             </td>
             <td v-else></td>
@@ -207,6 +224,7 @@ const tournamentStore = useTournamentStore();
 const roundDisplay = ref(1);
 const printDialog = ref(false);
 const detail = ref(false);
+const edit = ref(false);
 
 onMounted(() => {});
 

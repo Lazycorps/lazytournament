@@ -28,7 +28,8 @@
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar color="primary" class="noprint"> LazyTournament </v-app-bar>
+    <v-app-bar color="primary" class="noprint" title="LazyTournament">
+    </v-app-bar>
     <v-main class="print">
       <div class="pa-5">
         <router-view />

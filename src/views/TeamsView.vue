@@ -11,19 +11,15 @@
       </v-text-field>
     </v-col>
   </v-row>
-  <v-row class="d-flex justify-start">
-    
-  </v-row>
+  <v-row class="d-flex justify-start"> </v-row>
   <v-row>
     <v-table>
       <thead>
         <tr>
           <th class="text-left" style="width: 100px">Numéro</th>
           <th class="text-left" style="width: 80">Présent</th>
-          <th class="text-left" style="width: 80">boule</th>
           <th class="text-left" style="width: 300px">Nom</th>
           <th class="text-left" style="width: 400px">Responsable</th>
-          <th class="text-left" style="width: 300px">Staff</th>
           <th class="text-left" style="width: 100px">Score</th>
           <th class="text-left" style="width: 150px">
             <v-checkbox v-model="edition" hide-details>Supprimer</v-checkbox>
@@ -36,9 +32,6 @@
           <td>
             <v-checkbox v-model="item.isReady" hide-details></v-checkbox>
           </td>
-          <td>
-            <v-checkbox v-model="item.boule" hide-details></v-checkbox>
-          </td>
           <td>{{ item.name }}</td>
           <td>
             <v-text-field
@@ -48,21 +41,6 @@
               density="compact"
               v-model="item.membre"
             ></v-text-field>
-          </td>
-          <td>
-            <div class="d-flex justify-start align-center">
-              <v-checkbox v-model="item.isStaff" hide-details></v-checkbox>
-              <v-text-field
-                v-if="item.isStaff"
-                class="mr-3"
-                single-line
-                hide-details
-                density="compact"
-                label="Staff info"
-                style="width: 300px"
-                v-model="item.staffInfo"
-              ></v-text-field>
-            </div>
           </td>
           <td>{{ item.score }}</td>
           <td>

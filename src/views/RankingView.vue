@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <h1 >Classement</h1>
+    <h1>Classement</h1>
     <v-btn
       round
       color="primary"
@@ -10,7 +10,12 @@
       @click="print()"
       >Print</v-btn
     >
-    <v-btn outline class="noprint" color="primary" @click="tournamentStore.recalculScore" dark
+    <v-btn
+      outline
+      class="noprint"
+      color="primary"
+      @click="tournamentStore.recalculScore"
+      dark
       >Recalculer</v-btn
     >
   </v-row>
@@ -35,7 +40,7 @@
           <td class="d-flex flex-row">
             <template
               v-for="(match, i) in tournamentStore.getTeamMatches(team.name)"
-              :key="match.name"
+              :key="match.id"
             >
               <div
                 v-if="match.winner == team.name"
@@ -70,7 +75,6 @@
 
 <script setup lang="ts">
 import { useTournamentStore } from "@/stores/tournament";
-import { ref } from "vue";
 
 const tournamentStore = useTournamentStore();
 
