@@ -48,10 +48,10 @@ export const useTournamentStore = defineStore("tournament", {
     getTeamScore: (state) => {
       return (teamName: string | null | undefined): number => {
         if (!teamName) return 0;
-
         const teamMatches = state.matches.filter(
           (match) =>
-            match.team1?.name === teamName || match.team2?.name === teamName
+            match.team1?.name === teamName ||
+            (match.team2?.name == teamName && !match.amicalForTeam2)
         );
 
         const wins = teamMatches.filter(
@@ -70,7 +70,8 @@ export const useTournamentStore = defineStore("tournament", {
 
         const teamMatches = state.matches.filter(
           (match) =>
-            match.team1?.name === teamName || match.team2?.name === teamName
+            match.team1?.name === teamName ||
+            (match.team2?.name == teamName && !match.amicalForTeam2)
         );
 
         return teamMatches.reduce((total, match) => {
@@ -88,7 +89,8 @@ export const useTournamentStore = defineStore("tournament", {
 
         return state.matches.filter(
           (match) =>
-            match.team1?.name === teamName || match.team2?.name === teamName
+            match.team1?.name === teamName ||
+            (match.team2?.name == teamName && !match.amicalForTeam2)
         );
       };
     },
@@ -272,7 +274,7 @@ export const useTournamentStore = defineStore("tournament", {
         if (match.team1?.isReady) {
           teamNames.add(match.team1.name);
         }
-        if (match.team2?.isReady) {
+        if (match.team2?.isReady && !match.amicalForTeam2) {
           teamNames.add(match.team2.name);
         }
       });
