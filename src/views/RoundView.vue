@@ -1,5 +1,5 @@
 <template>
-  <v-row class="pa-3">
+  <v-row>
     <v-col cols="12">
       <v-btn
         v-for="n in tournamentStore.rounds"
@@ -10,7 +10,7 @@
       >
     </v-col>
   </v-row>
-  <v-row class="pl-3" no-gutters>
+  <v-row no-gutters>
     <v-col class="d-flex justify-start align-center" cols="12">
       <v-btn
         color="success"
@@ -29,11 +29,9 @@
       >
       <v-btn
         color="blue"
-        class="ml-5"
+        icon="mdi-printer"
         @click="printDialog = true"
-        append-icon="mdi-printer"
-        >Imprimer</v-btn
-      >
+      ></v-btn>
       <v-checkbox v-model="detail" hide-details label="Détail"></v-checkbox>
       <v-checkbox v-model="edit" hide-details label="Edit"></v-checkbox>
       <v-checkbox

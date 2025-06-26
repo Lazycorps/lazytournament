@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer permanent class="noprint">
+    <v-navigation-drawer permanent class="noprint" :width="180">
       <v-list nav>
         <v-list-item
           prepend-icon="mdi-account-group-outline"
