@@ -85,16 +85,23 @@
                 {{ item.team1?.membre }} <b>({{ item.team1?.score }})</b>
               </div>
             </td>
-            <td v-if="item.team2" :style="getColor(item, item.team2?.name)">
-              <v-select
-                v-if="edit"
-                :items="tournamentStore.teams"
-                v-model="item.team2"
-                item-title="name"
-                hide-details
-                density="compact"
-                return-object
-              ></v-select>
+            <td :style="getColor(item, item.team2?.name)">
+              <span v-if="edit" class="d-flex align-center">
+                <v-select
+                  :items="tournamentStore.teams"
+                  v-model="item.team2"
+                  item-title="name"
+                  hide-details
+                  density="compact"
+                  return-object
+                ></v-select>
+                <v-checkbox
+                  v-model="item.amicalForTeam2"
+                  density="compact"
+                  hide-details
+                >
+                </v-checkbox>
+              </span>
               <div v-else>
                 {{ item.team2?.name }}
               </div>
@@ -102,7 +109,6 @@
                 {{ item.team2?.membre }} <b>({{ item.team2?.score }})</b>
               </div>
             </td>
-            <td v-else></td>
             <td class="d-flex justify-start align-center">
               <v-text-field
                 single-line
@@ -124,6 +130,12 @@
                 type="number"
               >
               </v-text-field>
+              <v-icon
+                v-if="tournamentStore.sameMatchAlreadyPlayed(item)"
+                color="orange"
+                v-tooltip="'Ce match a déjà été joué'"
+                >mdi-alert</v-icon
+              >
             </td>
             <td>
               <v-btn

@@ -10,6 +10,7 @@ export interface IMatch {
   scoreTeam1: number;
   scoreTeam2: number;
   winner: string;
+  amicalForTeam2: boolean;
 }
 
 export default class Match {

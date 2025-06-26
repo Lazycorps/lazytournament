@@ -287,7 +287,7 @@ export const useTournamentStore = defineStore("tournament", {
     },
 
     /**
-     * Génère les appariements d'équipes selon le système suisse avec gestion des conflits
+     * Génère les appariements d'équipes selon le système suisse
      */
     _generateTeamPairings(teams: Team[]): TeamPairing[] {
       const pairings: TeamPairing[] = [];
@@ -301,22 +301,6 @@ export const useTournamentStore = defineStore("tournament", {
           const team2Index = remainingTeams.indexOf(team2);
           remainingTeams.splice(team2Index, 1);
           pairings.push({ team1, team2 });
-        } else {
-          console.log("bad pairing", team1, remainingTeams);
-          // Cas critique : aucun adversaire valide trouvé
-          // Essayer de réorganiser les appariements précédents
-          const reorganizedPairings = this._reorganizePairings(
-            pairings,
-            team1,
-            remainingTeams
-          );
-          if (reorganizedPairings) {
-            return reorganizedPairings;
-          } else {
-            // Si la réorganisation échoue, forcer l'appariement avec la première équipe disponible
-            const forcedOpponent = remainingTeams.shift();
-            pairings.push({ team1, team2: forcedOpponent || null });
-          }
         }
       }
 
@@ -329,64 +313,13 @@ export const useTournamentStore = defineStore("tournament", {
     },
 
     /**
-     * Réorganise les appariements précédents pour résoudre les conflits
-     */
-    _reorganizePairings(
-      currentPairings: TeamPairing[],
-      problematicTeam: Team,
-      remainingTeams: Team[]
-    ): TeamPairing[] | null {
-      // Essayer de défaire le dernier appariement et réorganiser
-      if (currentPairings.length === 0) return null;
-
-      const lastPairing = currentPairings.pop()!;
-      if (!lastPairing.team2) return null;
-
-      // Remettre les équipes du dernier appariement dans le pool
-      const newRemainingTeams = [
-        lastPairing.team1,
-        lastPairing.team2,
-        problematicTeam,
-        ...remainingTeams,
-      ];
-
-      // Essayer de trouver une nouvelle configuration
-      const team1 = newRemainingTeams.shift()!;
-
-      for (let i = 0; i < newRemainingTeams.length; i++) {
-        const potentialTeam2 = newRemainingTeams[i];
-
-        if (!this._haveTeamsPlayedBefore(team1, potentialTeam2)) {
-          // Appariement valide trouvé
-          newRemainingTeams.splice(i, 1);
-          const newPairing = { team1, team2: potentialTeam2 };
-
-          // Continuer avec les équipes restantes
-          const restOfPairings = this._generateTeamPairings(newRemainingTeams);
-
-          return [...currentPairings, newPairing, ...restOfPairings];
-        }
-      }
-
-      // Si aucune solution trouvée, essayer avec le précédent appariement
-      if (currentPairings.length > 0) {
-        return this._reorganizePairings(currentPairings, problematicTeam, [
-          lastPairing.team1,
-          lastPairing.team2,
-          ...remainingTeams,
-        ]);
-      }
-
-      return null;
-    },
-
-    /**
      * Trouve le meilleur adversaire pour une équipe selon les règles du système suisse
      */
     _findBestOpponent(team: Team, availableTeams: Team[]): Team | null {
       if (availableTeams.length === 0) return null;
 
       // Chercher une équipe qui n'a jamais joué contre cette équipe
+      if (availableTeams.length == 1) return availableTeams[0];
       for (const opponent of availableTeams) {
         if (!this._haveTeamsPlayedBefore(team, opponent)) {
           return opponent;
@@ -423,18 +356,6 @@ export const useTournamentStore = defineStore("tournament", {
     },
 
     /**
-     * Vérifie si deux équipes ont déjà joué ensemble
-     */
-    _haveTeamsPlayedBefore(team1: Team, team2: Team): boolean {
-      return this.matches.some(
-        (match) =>
-          (match.team1?.name === team1.name &&
-            match.team2?.name === team2.name) ||
-          (match.team1?.name === team2.name && match.team2?.name === team1.name)
-      );
-    },
-
-    /**
      * Crée les matchs à partir des appariements
      */
     _createMatchesFromPairings(
@@ -465,7 +386,29 @@ export const useTournamentStore = defineStore("tournament", {
         return match;
       });
     },
+    /**
+     * Vérifie si deux équipes ont déjà joué ensemble
+     */
+    _haveTeamsPlayedBefore(team1: Team | null, team2: Team | null): boolean {
+      if (team1 == null || team2 == null) return false;
 
+      return this.matches.some(
+        (match) =>
+          (match.team1?.name === team1.name &&
+            match.team2?.name === team2.name) ||
+          (match.team1?.name === team2.name && match.team2?.name === team1.name)
+      );
+    },
+    sameMatchAlreadyPlayed(matchToTest: Match): boolean {
+      return this.matches.some(
+        (match) =>
+          match != matchToTest &&
+          ((match.team1?.name === matchToTest.team1?.name &&
+            match.team2?.name === matchToTest.team2?.name) ||
+            (match.team1?.name === matchToTest.team2?.name &&
+              match.team2?.name === matchToTest.team1?.name))
+      );
+    },
     /**
      * Ajuste l'ordre des phases pour la dernière manche
      */
@@ -541,62 +484,6 @@ export const useTournamentStore = defineStore("tournament", {
     // Actions de compatibilité avec l'ancien code
     recalculScore(): void {
       this.recalculateAllScores();
-    },
-
-    generateMatchForTeam(
-      round: number,
-      firstTeam: Team,
-      teamsToPair: Team[]
-    ): Match {
-      let secondTeam: Team | null = null;
-
-      for (let j = 0; j < teamsToPair.length; j++) {
-        secondTeam = teamsToPair[j];
-        //Si un match a déjà eu lieu entre 2 équipe on passe à l'équipe suivante
-        const alreadyPlayed = this.matches.filter(
-          (m) =>
-            (m.team1?.name == firstTeam.name &&
-              m.team2?.name == secondTeam?.name) ||
-            (m.team1?.name == secondTeam?.name &&
-              m.team2?.name == firstTeam.name)
-        )[0];
-
-        if (!alreadyPlayed || teamsToPair.length == 1) {
-          teamsToPair.splice(j, 1);
-          break;
-        }
-      }
-
-      //Création de l'objet match, si le nombre d'équipe est impair, l'équipe ayant le plus petit score est déclarée vainqueure et ne joue pas cette manche
-      const match = new Match({
-        field: 1,
-        round,
-        team1: firstTeam,
-        team2: secondTeam ? secondTeam : null,
-        winner: "",
-      });
-      return match;
-    },
-
-    getPreviousMatchTeams(previousMatch: Match[]) {
-      let teamsToPair: Team[] = [];
-      previousMatch.forEach((p) => {
-        if (p.team1)
-          teamsToPair.push(
-            this.teams.filter(
-              (t) => t.name == p.team1?.name && p.team1?.isReady
-            )[0]
-          );
-        if (p.team2)
-          teamsToPair.push(
-            this.teams.filter(
-              (t) => t.name == p.team2?.name && p.team2?.isReady
-            )[0]
-          );
-      });
-      return teamsToPair.sort(
-        (t1, t2) => t2.score - t1.score || t2.pointMarque - t1.pointMarque
-      );
     },
 
     resetAllRound() {
